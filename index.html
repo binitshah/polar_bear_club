@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <title>Polar Bear Club</title>
+    <!--- link to the last version of babylon --->
+    <script src="http://cdn.babylonjs.com/2-3/babylon.max.js"></script>
+    <style>
+        html, body {
+            overflow: hidden;
+            width   : 100%;
+            height  : 100%;
+            margin  : 0;
+            padding : 0;
+            background-color: #141428;
+        }
+
+        #renderCanvas {
+            width   : 100%;
+            height  : 100%;
+            touch-action: none;
+        }
+
+        #header {
+          background-color: #141428;
+          width: 100%
+          position: absolute;
+          margin: 0;
+          padding-top: 1em;
+          padding-right: 1em;
+          padding-bottom: 2.3em;
+          padding-left: 1em;
+        }
+
+        #logo {
+          float: left;
+        }
+
+        #mainname {
+          position: absolute;
+          right: 43%;
+          text-align: center;
+          font-size: 1.2em;
+          letter-spacing: 0.1316872428em;
+          color: #e8e8ea;
+          text-transform: uppercase;
+          line-height: 1;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: bold;
+          margin-top: 0px;
+          margin-right: 0px;
+          margin-bottom: 0px;
+          margin-left: 0px;
+        }
+
+        a {
+          font-size: 0.90em;
+          font-weight: bold;
+          letter-spacing: 0.1316872428em;
+          margin-top: 0px;
+          margin-right: 0px;
+          margin-bottom: 0.444444em;
+          margin-left: 0px;
+          color: #e8e8ea;
+          text-decoration: none;
+          text-transform: uppercase;
+          line-height: 1;
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        #seecode {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 100px;
+          text-align:right;
+          font-size: 0.86em;
+          letter-spacing: 0.1316872428em;
+          margin-top: 0px;
+          margin-right: 5px;
+          margin-bottom: 0.444444em;
+          margin-left: 0px;
+          color: #e8e8ea;
+          text-decoration: none;
+          text-transform: uppercase;
+          line-height: 1;
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        #intro {
+          width   : 100%;
+          height  : 100%;
+          background-color: #141428;
+        }
+
+        #riddle {
+          text-align: center;
+          letter-spacing: 0.0116872428em;
+          font-size: 3em;
+          color: #e8e8ea;
+          line-height: 1;
+          font-family: 'Roboto Condensed', sans-serif;
+          font-weight: 700;
+          padding-top: 10%;
+        }
+
+        #start {
+          text-align: center;
+          padding-top: 10%;
+        }
+
+        button {
+          -webkit-border-radius: 3;
+          -moz-border-radius: 3;
+          border-radius: 3px;
+          font-family: Arial;
+          color: #e8e8ea;
+          font-size: 20px;
+          background: #141428;
+          padding: 10px 20px 10px 20px;
+          border: none;
+          font-family: 'Roboto Condensed', sans-serif;
+          font-weight: 700;
+          text-decoration: none;
+        }
+
+        button:hover {
+          background: #434353;
+          text-decoration: none;
+        }
+
+        #answer {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          text-align:left;
+          visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+      <div id="logo">
+        <a href="http://binitshah.com/" rel="home">Binit Shah</a>
+      </div>
+      <div id="mainname">
+        Polar Bear Club
+      </div>
+    </div>
+    <div id="seecode">
+      <a href="https://github.com/bshah2016/snake">Check out the code!</a>
+    </div>
+    <div id="answer">
+      <button onclick="showAnswer()">Reveal answer.</button>
+    </div>
+    <div id="intro">
+      <div id="riddle">
+        Polar Bears come in pairs.<br>They sit around a hole in the ice like petals on a flower.<br>How many polar bears are there?<br>How many fish?
+      </div>
+      <div id="start">
+        <button onclick="hideIntro()">Let's begin.</button>
+      </div>
+    </div>
+
+
+    <canvas id="renderCanvas"><p style="color: #FFFFFF;">Apologies, however this game needs the canvas element to be able to run.<p></canvas>
+    <script>
+        var polarbearnum = 0;
+        var fishnum = 0;
+        /*
+        * Returns a random integer between min (inclusive) and max (inclusive)
+        * Using Math.round() will give you a non-uniform distribution!
+        */
+        function getRandomInt(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function hideIntro(){
+          document.getElementById("intro").style.visibility = "hidden";
+          document.getElementById("intro").style.height = "0%";
+          document.getElementById("answer").style.visibility = "visible";
+        }
+
+        function showAnswer(){
+          alert("There are " + polarbearnum + " polar bears and " + fishnum + " fishes. Refresh to play again.");
+        }
+
+        window.addEventListener('DOMContentLoaded', function(){
+
+            var dicerandomnumber = new Array(6);
+
+
+            for (var i = 0; i < 6; i++) {
+              dicerandomnumber[i] = getRandomInt(1,6);
+              switch (dicerandomnumber[i]) {
+                case 1:
+                  fishnum += 6;
+                  break;
+                case 3:
+                  fishnum += 4;
+                  polarbearnum += 2;
+                  break;
+                case 5:
+                  fishnum += 2;
+                  polarbearnum += 4;
+                  break;
+                default:
+              }
+            }
+
+
+
+            // get the canvas DOM element
+            var canvas = document.getElementById('renderCanvas');
+
+            // load the 3D engine
+            var engine = new BABYLON.Engine(canvas, true);
+
+            // createScene function that creates and return the scene
+            var createScene = function(){
+                // create a basic BJS Scene object
+                var scene = new BABYLON.Scene(engine);
+
+                var camera = new BABYLON.ArcRotateCamera("camera1",  0, 0, 0, new BABYLON.Vector3(0, 0, -0), scene);
+                camera.setPosition(new BABYLON.Vector3(0, 5, -17.4));
+                camera.attachControl(canvas, true);
+
+                // create a basic light, aiming 0,1,0 - meaning, to the sky
+                var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
+
+                var mat = new BABYLON.StandardMaterial("mat1", scene);
+                mat.alpha = 1.0;
+                mat.diffuseColor = new BABYLON.Color3(1.0, 1.0, 1.0);
+                var texture = new BABYLON.Texture("http://binitshah.com/+polarbearclub/diceatlas.png", scene);
+                mat.diffuseTexture = texture;
+
+                var hSpriteNb =  6;
+                var vSpriteNb =  1;
+
+                var faceUV = new Array(6);
+
+                for (var i = 0; i < 6; i++) {
+                  faceUV[i] = new BABYLON.Vector4(i / hSpriteNb, i/ vSpriteNb, (i+1) / hSpriteNb, (i+1) / vSpriteNb);
+                }
+
+                var options = {
+                  width: 1,
+                  height: 1,
+                  depth: 1,
+                  faceUV: faceUV
+                };
+
+
+
+                var box1 = BABYLON.MeshBuilder.CreateBox("box1", options, scene);
+                var box2 = BABYLON.MeshBuilder.CreateBox("box2", options, scene);
+                var box3 = BABYLON.MeshBuilder.CreateBox("box3", options, scene);
+                var box4 = BABYLON.MeshBuilder.CreateBox("box4", options, scene);
+                var box5 = BABYLON.MeshBuilder.CreateBox("box5", options, scene);
+                var box6 = BABYLON.MeshBuilder.CreateBox("box6", options, scene);
+                box1.material = mat;
+                box2.material = mat;
+                box3.material = mat;
+                box4.material = mat;
+                box5.material = mat;
+                box6.material = mat;
+
+
+                // positon the dice correctly
+                box1.position.y = 0.5;
+                box1.position.x = -3.5 + Math.random()*2-1;
+                box1.position.z = -3.5 + Math.random()*2-1;
+
+                box2.position.y = 0.5;
+                box2.position.x = -3.5 + Math.random()*2-1;
+
+                box3.position.y = 0.5;
+                box3.position.z = 3.5 + Math.random()*2-1;
+                box3.position.x = 3.5 + Math.random()*2-1;
+
+                box4.position.y = 0.5;
+                box4.position.z = -3.5 + Math.random()*2-1;
+                box4.position.x = 3.5 + Math.random()*2-1;
+
+                box5.position.y = 0.5;
+                box5.position.x = 3.5 + Math.random()*2-1;
+
+                box6.position.y = 0.5;
+                box6.position.x = -3.5 + Math.random()*2-1;
+                box6.position.z = 3.5 + Math.random()*2-1;
+
+                //rotate the dice to the correct orientation
+                var randz1 = (Math.random() * (Math.PI*2)).toFixed(3);
+                switch (dicerandomnumber[0]) {
+                  case 1:
+                    box1.rotation = new BABYLON.Vector3(-Math.PI/2, randz1, 0);
+                    break;
+                  case 2:
+                    box1.rotation = new BABYLON.Vector3(Math.PI, randz1, 0);
+                    break;
+                  case 3:
+                    box1.rotation = new BABYLON.Vector3(0, randz1, Math.PI/2);
+                    break;
+                  case 4:
+                    box1.rotation = new BABYLON.Vector3(0, randz1, -Math.PI/2);
+                    break;
+                  case 5:
+                    break;
+                  case 6:
+                    box1.rotation = new BABYLON.Vector3(Math.PI/2, randz1, 0);
+                    break;
+                  default:
+                }
+
+                var randz2 = (Math.random() * (Math.PI*2)).toFixed(3);
+                switch (dicerandomnumber[1]) {
+                  case 1:
+                    box2.rotation = new BABYLON.Vector3(-Math.PI/2, randz2, 0);
+                    break;
+                  case 2:
+                    box2.rotation = new BABYLON.Vector3(Math.PI, randz2, 0);
+                    break;
+                  case 3:
+                    box2.rotation = new BABYLON.Vector3(0, randz2, Math.PI/2);
+                    break;
+                  case 4:
+                    box2.rotation = new BABYLON.Vector3(0, randz2, -Math.PI/2);
+                    break;
+                  case 5:
+                    break;
+                  case 6:
+                    box2.rotation = new BABYLON.Vector3(Math.PI/2, randz2, 0);
+                    break;
+                  default:
+                }
+
+                var randz3 = (Math.random() * (Math.PI*2)).toFixed(3);
+                switch (dicerandomnumber[2]) {
+                  case 1:
+                    box3.rotation = new BABYLON.Vector3(-Math.PI/2, randz3, 0);
+                    break;
+                  case 2:
+                    box3.rotation = new BABYLON.Vector3(Math.PI, randz3, 0);
+                    break;
+                  case 3:
+                    box3.rotation = new BABYLON.Vector3(0, randz3, Math.PI/2);
+                    break;
+                  case 4:
+                    box3.rotation = new BABYLON.Vector3(0, randz3, -Math.PI/2);
+                    break;
+                  case 5:
+                    break;
+                  case 6:
+                    box3.rotation = new BABYLON.Vector3(Math.PI/2, randz3, 0);
+                    break;
+                  default:
+                }
+
+                var randz4 = (Math.random() * (Math.PI*2)).toFixed(3);
+                switch (dicerandomnumber[3]) {
+                  case 1:
+                    box4.rotation = new BABYLON.Vector3(-Math.PI/2, randz4, 0);
+                    break;
+                  case 2:
+                    box4.rotation = new BABYLON.Vector3(Math.PI, randz4, 0);
+                    break;
+                  case 3:
+                    box4.rotation = new BABYLON.Vector3(0, randz4, Math.PI/2);
+                    break;
+                  case 4:
+                    box4.rotation = new BABYLON.Vector3(0, randz4, -Math.PI/2);
+                    break;
+                  case 5:
+                    break;
+                  case 6:
+                    box4.rotation = new BABYLON.Vector3(Math.PI/2, randz4, 0);
+                    break;
+                  default:
+                }
+
+                var randz5 = (Math.random() * (Math.PI*2)).toFixed(3);
+                switch (dicerandomnumber[4]) {
+                  case 1:
+                    box5.rotation = new BABYLON.Vector3(-Math.PI/2, randz5, 0);
+                    break;
+                  case 2:
+                    box5.rotation = new BABYLON.Vector3(Math.PI, randz5, 0);
+                    break;
+                  case 3:
+                    box5.rotation = new BABYLON.Vector3(0, randz5, Math.PI/2);
+                    break;
+                  case 4:
+                    box5.rotation = new BABYLON.Vector3(0, randz5, -Math.PI/2);
+                    break;
+                  case 5:
+                    break;
+                  case 6:
+                    box5.rotation = new BABYLON.Vector3(Math.PI/2, randz5, 0);
+                    break;
+                  default:
+                }
+
+                var randz6 = (Math.random() * (Math.PI*2)).toFixed(3);
+                switch (dicerandomnumber[5]) {
+                  case 1:
+                    box6.rotation = new BABYLON.Vector3(-Math.PI/2, randz6, 0);
+                    break;
+                  case 2:
+                    box6.rotation = new BABYLON.Vector3(Math.PI, randz6, 0);
+                    break;
+                  case 3:
+                    box6.rotation = new BABYLON.Vector3(0, randz6, Math.PI/2);
+                    break;
+                  case 4:
+                    box6.rotation = new BABYLON.Vector3(0, randz6, -Math.PI/2);
+                    break;
+                  case 5:
+                    break;
+                  case 6:
+                    box6.rotation = new BABYLON.Vector3(Math.PI/2, randz6, 0);
+                    break;
+                  default:
+                }
+
+                // create a built-in "ground" shape; its constructor takes the same 5 params as the sphere's one
+                var ground = BABYLON.Mesh.CreateGround('ground1', 20, 20, 1, scene);
+
+                // return the created scene
+                return scene;
+            }
+
+            // call the createScene function
+            var scene = createScene();
+
+            // run the render loop
+            engine.runRenderLoop(function(){
+                scene.render();
+
+            });
+        });
+    </script>
+</body>
+</html>
